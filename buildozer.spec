@@ -16,7 +16,7 @@ orientation = portrait
 fullscreen = 0
 
 # Current Android target/minimum settings used by the modern Buildozer/p4a toolchain.
-android.api = 36
+android.api = 35
 android.minapi = 24
 android.archs = arm64-v8a
 android.accept_sdk_license = True
