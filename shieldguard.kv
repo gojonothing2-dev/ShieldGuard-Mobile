@@ -1,0 +1,404 @@
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+
+<NavButton@Button>:
+    size_hint_y: None
+    height: dp(48)
+    font_size: sp(14)
+    background_normal: ""
+    background_color: (0.09, 0.12, 0.18, 1)
+
+<PrimaryButton@Button>:
+    size_hint_y: None
+    height: dp(48)
+    font_size: sp(14)
+    background_normal: ""
+    background_color: (0.12, 0.46, 0.86, 1)
+    color: (1, 1, 1, 1)
+
+<SecondaryButton@Button>:
+    size_hint_y: None
+    height: dp(44)
+    font_size: sp(13)
+    background_normal: ""
+    background_color: (0.17, 0.20, 0.28, 1)
+    color: (0.92, 0.95, 1, 1)
+
+<PanelLabel@Label>:
+    color: (0.77, 0.82, 0.90, 1)
+    font_size: sp(13)
+    halign: "left"
+    valign: "middle"
+    text_size: self.width - dp(12), None
+
+ScreenManager:
+    DashboardScreen:
+        name: "dashboard"
+    NetworkScreen:
+        name: "network"
+    ToolsScreen:
+        name: "tools"
+    LogsScreen:
+        name: "logs"
+
+<DashboardScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(14)
+        spacing: dp(12)
+        canvas.before:
+            Color:
+                rgba: (0.035, 0.045, 0.065, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            size_hint_y: None
+            height: dp(56)
+            text: "SHIELDGUARD MOBILE"
+            color: (0.35, 0.78, 1, 1)
+            font_size: sp(21)
+            bold: True
+
+        Label:
+            size_hint_y: None
+            height: dp(44)
+            text: app.app_status
+            color: (0.8, 0.85, 0.93, 1)
+            font_size: sp(14)
+            halign: "left"
+            valign: "middle"
+            text_size: self.width, None
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(130)
+            orientation: "vertical"
+            padding: dp(14)
+            spacing: dp(5)
+            canvas.before:
+                Color:
+                    rgba: (0.07, 0.09, 0.13, 1)
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(12), dp(12), dp(12), dp(12)]
+            Label:
+                text: "DEFENSIVE SECURITY TOOLKIT"
+                color: (0.35, 0.78, 1, 1)
+                font_size: sp(16)
+                bold: True
+                halign: "left"
+                text_size: self.width, None
+            PanelLabel:
+                text: "Use the toolkit to inspect basic connectivity, generate strong random passwords, calculate SHA-256 hashes, and keep a local activity log. No network scanning or attack functions are included."
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(120)
+            spacing: dp(10)
+            PrimaryButton:
+                text: "Check Network"
+                on_release: app.go_to("network")
+            PrimaryButton:
+                text: "Security Tools"
+                on_release: app.go_to("tools")
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(80)
+            spacing: dp(10)
+            SecondaryButton:
+                text: "Activity Log"
+                on_release: app.go_to("logs")
+            SecondaryButton:
+                text: "Refresh"
+                on_release: app.refresh_network()
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            NavButton:
+                text: "Home"
+                on_release: app.go_to("dashboard")
+            NavButton:
+                text: "Network"
+                on_release: app.go_to("network")
+            NavButton:
+                text: "Tools"
+                on_release: app.go_to("tools")
+            NavButton:
+                text: "Logs"
+                on_release: app.go_to("logs")
+
+<NetworkScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(14)
+        spacing: dp(10)
+        canvas.before:
+            Color:
+                rgba: (0.035, 0.045, 0.065, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            size_hint_y: None
+            height: dp(48)
+            text: "NETWORK STATUS"
+            color: (0.35, 0.78, 1, 1)
+            font_size: sp(20)
+            bold: True
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(155)
+            orientation: "vertical"
+            padding: dp(14)
+            spacing: dp(4)
+            canvas.before:
+                Color:
+                    rgba: (0.07, 0.09, 0.13, 1)
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(12), dp(12), dp(12), dp(12)]
+            PanelLabel:
+                text: "Connection: " + app.network_status
+            PanelLabel:
+                text: "Hostname: " + app.hostname
+            PanelLabel:
+                text: "Local IP: " + app.local_ip
+            PanelLabel:
+                text: "Scope: local device information only"
+
+        PrimaryButton:
+            text: "Run Network Check"
+            on_release: app.refresh_network()
+
+        SecondaryButton:
+            text: "Quick Connectivity Test"
+            on_release: app.quick_connectivity_check()
+
+        PanelLabel:
+            text: "ShieldGuard deliberately avoids port scans, host discovery, credential attacks, packet injection, or other offensive network functions."
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            NavButton:
+                text: "Home"
+                on_release: app.go_to("dashboard")
+            NavButton:
+                text: "Network"
+                on_release: app.go_to("network")
+            NavButton:
+                text: "Tools"
+                on_release: app.go_to("tools")
+            NavButton:
+                text: "Logs"
+                on_release: app.go_to("logs")
+
+<ToolsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(14)
+        spacing: dp(9)
+        canvas.before:
+            Color:
+                rgba: (0.035, 0.045, 0.065, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            size_hint_y: None
+            height: dp(46)
+            text: "SECURITY TOOLS"
+            color: (0.35, 0.78, 1, 1)
+            font_size: sp(20)
+            bold: True
+
+        Label:
+            size_hint_y: None
+            height: dp(26)
+            text: "Strong password generator"
+            color: (0.9, 0.93, 0.98, 1)
+            font_size: sp(15)
+            halign: "left"
+            text_size: self.width, None
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(8)
+            TextInput:
+                id: password_length
+                text: "20"
+                input_filter: "int"
+                multiline: False
+                font_size: sp(16)
+                background_normal: ""
+                background_color: (0.08, 0.10, 0.15, 1)
+                foreground_color: (1, 1, 1, 1)
+            ToggleButton:
+                id: include_symbols
+                text: "Symbols"
+                state: "down"
+                background_normal: ""
+                background_color: (0.16, 0.28, 0.40, 1)
+                color: (1, 1, 1, 1)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(8)
+            PrimaryButton:
+                text: "Generate"
+                on_release: app.make_password()
+            SecondaryButton:
+                text: "Copy"
+                on_release: app.copy_password()
+
+        TextInput:
+            size_hint_y: None
+            height: dp(72)
+            text: app.generated_password
+            readonly: True
+            multiline: True
+            font_size: sp(14)
+            background_normal: ""
+            background_color: (0.07, 0.09, 0.13, 1)
+            foreground_color: (0.67, 0.90, 1, 1)
+            padding: dp(10), dp(10)
+
+        Label:
+            size_hint_y: None
+            height: dp(26)
+            text: "SHA-256 text hash"
+            color: (0.9, 0.93, 0.98, 1)
+            font_size: sp(15)
+            halign: "left"
+            text_size: self.width, None
+
+        TextInput:
+            id: hash_input
+            hint_text: "Enter text to hash"
+            multiline: True
+            font_size: sp(14)
+            background_normal: ""
+            background_color: (0.08, 0.10, 0.15, 1)
+            foreground_color: (1, 1, 1, 1)
+            padding: dp(10), dp(10)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(46)
+            spacing: dp(8)
+            PrimaryButton:
+                text: "Calculate SHA-256"
+                on_release: app.hash_text()
+            SecondaryButton:
+                text: "Clear"
+                on_release: app.clear_hash()
+
+        TextInput:
+            size_hint_y: None
+            height: dp(80)
+            text: app.hash_output
+            readonly: True
+            multiline: True
+            font_size: sp(13)
+            background_normal: ""
+            background_color: (0.07, 0.09, 0.13, 1)
+            foreground_color: (0.70, 0.90, 1, 1)
+            padding: dp(10), dp(10)
+
+        SecondaryButton:
+            text: "Copy Hash"
+            on_release: app.copy_hash()
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            NavButton:
+                text: "Home"
+                on_release: app.go_to("dashboard")
+            NavButton:
+                text: "Network"
+                on_release: app.go_to("network")
+            NavButton:
+                text: "Tools"
+                on_release: app.go_to("tools")
+            NavButton:
+                text: "Logs"
+                on_release: app.go_to("logs")
+
+<LogsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(14)
+        spacing: dp(9)
+        canvas.before:
+            Color:
+                rgba: (0.035, 0.045, 0.065, 1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            size_hint_y: None
+            height: dp(46)
+            text: "ACTIVITY LOG"
+            color: (0.35, 0.78, 1, 1)
+            font_size: sp(20)
+            bold: True
+
+        ScrollView:
+            do_scroll_x: False
+            bar_width: dp(5)
+            TextInput:
+                text: app.logs_text
+                readonly: True
+                multiline: True
+                size_hint_y: None
+                height: max(self.minimum_height, dp(400))
+                font_size: sp(12)
+                background_normal: ""
+                background_color: (0.05, 0.07, 0.10, 1)
+                foreground_color: (0.80, 0.86, 0.92, 1)
+                padding: dp(10), dp(10)
+
+        SecondaryButton:
+            text: "Clear Local Log"
+            on_release: app.clear_logs()
+
+        Widget:
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            NavButton:
+                text: "Home"
+                on_release: app.go_to("dashboard")
+            NavButton:
+                text: "Network"
+                on_release: app.go_to("network")
+            NavButton:
+                text: "Tools"
+                on_release: app.go_to("tools")
+            NavButton:
+                text: "Logs"
+                on_release: app.go_to("logs")
