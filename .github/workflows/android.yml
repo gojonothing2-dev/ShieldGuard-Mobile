@@ -9,67 +9,80 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: shieldguard-android-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     name: Build Android APK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    env:
+      PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: "0"
+      BUILDOZER_ALLOW_ORG_TEST_DOMAIN: "1"
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v7
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
-      - name: Set up Java
+      - name: Set up Java 17
         uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Install system dependencies
+      - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            git \
-            zip \
-            unzip \
             autoconf \
             automake \
-            libtool \
-            libltdl-dev \
-            pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
+            build-essential \
+            ccache \
             cmake \
             libffi-dev \
-            libssl-dev
+            libltdl-dev \
+            libncurses5-dev \
+            libncursesw5-dev \
+            libssl-dev \
+            libtool \
+            pkg-config \
+            unzip \
+            zip
 
-      - name: Upgrade Python packaging tools
+      - name: Install Python build tools
         run: |
           python -m pip install --upgrade pip setuptools wheel
+          python -m pip install \
+            "buildozer==1.6.0" \
+            "Cython==0.29.33"
 
-      - name: Install Buildozer
+      - name: Verify toolchain
         run: |
-          python -m pip install "buildozer==1.6.0" "Cython==0.29.33"
-
-      - name: Check Buildozer
-        run: |
+          python --version
+          java -version
           buildozer --version
 
       - name: Build debug APK
-        env:
-          BUILDOZER_ALLOW_ORG_TEST_DOMAIN: "1"
         run: |
           buildozer -v android debug
+
+      - name: Verify APK output
+        run: |
+          test -n "$(find bin -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          ls -lh bin/*.apk
 
       - name: Upload APK
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          name: ShieldGuard-debug-apk
+          name: ShieldGuard-Mobile-debug
           path: bin/*.apk
           if-no-files-found: error
